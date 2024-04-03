@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const development_mode = true;
-const baseURL = development_mode
-  ? 'http://localhost:3000'
-  : 'https://todomatic.onrender.com';
+let baseURL = 'http://localhost:3000';
+if (import.meta.env.VITE_APP_NODE_ENV === 'production') {
+  baseURL = 'https://todomatic.onrender.com';
+}
 
 const config = {
   baseURL,

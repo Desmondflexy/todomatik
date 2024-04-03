@@ -11,7 +11,7 @@ export function generateToken(user: IUser) {
   return jwt.sign(jwtPayload, secretKey, { expiresIn });
 }
 
-/** Verify the token sent by the user */
+/** Verify the token sent by the user and returns the decoded token */
 export function verifyToken(token: string) {
   const secretKey = process.env.JWT_SECRET as string;
   return jwt.verify(token, secretKey);

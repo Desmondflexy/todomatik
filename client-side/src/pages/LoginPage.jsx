@@ -1,29 +1,32 @@
-import { useState } from 'react';
+import react from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import myApi from '../api.config.js';
 import GoogleButton from '../components/GoogleButton.jsx';
+import NavBar from '../components/NavBar.jsx';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = react.useState('');
+  const [password, setPassword] = react.useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  async function handleLogin(e) {
     e.preventDefault();
     try {
       const response = await myApi.post('/users/login', { email, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', response.data.firstName);
-
       navigate('/');
-
     } catch (error) {
-      console.error(error);
       alert(error.response.data)
     }
-  };
+  }
   return (
     <>
+      <NavBar >
+        <nav>
+          <h1>TodoMatic</h1>
+        </nav>
+      </NavBar>
       <div className="todoapp stack-large center">
         <h1>Login</h1>
         <form className='auth' onSubmit={handleLogin}>

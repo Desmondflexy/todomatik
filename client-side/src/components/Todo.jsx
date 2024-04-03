@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef, useEffect } from "react";
-import { usePrevious } from "../utils";
+import react from "react";
+import utils from "../utils";
 
 function Todo(props) {
-  const [isEditing, setEditing] = useState(false);
-  const [newName, setNewName] = useState(props.name);
-  const editFieldRef = useRef(null);
-  const editButtonRef = useRef(null);
-  const wasEditing = usePrevious(isEditing);
+  const [isEditing, setEditing] = react.useState(false);
+  const [newName, setNewName] = react.useState(props.name);
+  const editFieldRef = react.useRef(null);
+  const editButtonRef = react.useRef(null);
+  const wasEditing = utils.usePrevious(isEditing);
 
   const editingTemplate = (
     <form className="stack-small" onSubmit={handleSubmit}>
@@ -75,7 +75,7 @@ function Todo(props) {
     </div>
   );
 
-  useEffect(() => {
+  react.useEffect(() => {
     if (isEditing && !wasEditing) {
       editFieldRef.current.focus();
     }

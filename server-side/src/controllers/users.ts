@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/users";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { attachToken, generateToken } from "../utils";
 import * as v from "../validators";
 import { devLog } from "../utils";
@@ -35,7 +35,7 @@ export async function register(req: Request, res: Response) {
     res.status(201).json({ message: "register successful", userId: user._id });
   } catch (error) {
     devLog(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).send("Internal server error" );
   }
 }
 

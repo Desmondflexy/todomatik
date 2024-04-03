@@ -1,8 +1,8 @@
+import react from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import myApi from '../api.config';
 import { useNavigate } from 'react-router-dom';
-import react from 'react';
 
 function GoogleButton() {
   const [loading, setloading] = react.useState(false);

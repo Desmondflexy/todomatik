@@ -1,40 +1,29 @@
-/* eslint-disable react/prop-types */
+import react from "react";
+import { useNavigate, Link } from "react-router-dom";
 import FilterButton from "../components/FilterButton";
 import Form from "../components/Form";
 import Todo from "../components/Todo";
-import { useState, useRef, useEffect } from "react";
-import { usePrevious, FILTER_MAP, FILTER_NAMES } from "../utils";
+import utils from "../utils";
 import myApi from "../api.config";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 
 export default function TodoPage() {
-  const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("All");
-  const previousTaskLength = usePrevious(tasks.length);
+  const [tasks, setTasks] = react.useState([]);
+  const [filter, setFilter] = react.useState("All");
+  const [loading, setLoading] = react.useState(true);
+  const [apiStatus, setApiStatus] = react.useState(undefined);
+
+  const previousTaskLength = utils.usePrevious(tasks.length);
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  const [apiStatus, setApiStatus] = useState(undefined);
 
-  useEffect(() => {
-    myApi
-      .get(`/tasks`)
-      .then((res) => {
-        setApiStatus(res.status);
-        setTasks(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (!err.response) setApiStatus(500);
-        else setApiStatus(err.response.status);
-        setLoading(false);
-      });
+  react.useEffect(() => {
+    fetchTasks()
   }, []);
 
   const taskList = tasks
-    .filter(FILTER_MAP[filter])
+    .filter(utils.FILTER_MAP[filter])
     .map((task) => (
       <Todo
         key={task._id}
@@ -47,7 +36,7 @@ export default function TodoPage() {
       />
     ));
 
-  const filterList = FILTER_NAMES.map((name) => (
+  const filterList = utils.FILTER_NAMES.map((name) => (
     <FilterButton
       key={name}
       name={name}
@@ -59,9 +48,9 @@ export default function TodoPage() {
   const tasksNoun = taskList?.length !== 1 ? "tasks" : "task";
   const headingText = `${taskList?.length} ${tasksNoun}`;
 
-  const listHeadingRef = useRef(null);
+  const listHeadingRef = react.useRef(null);
 
-  useEffect(() => {
+  react.useEffect(() => {
     if (tasks.length + 1 === previousTaskLength) {
       listHeadingRef.current.focus();
     }
@@ -72,6 +61,8 @@ export default function TodoPage() {
   if (apiStatus !== undefined && apiStatus !== 200) {
     // Handle API error
     if (apiStatus === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setTimeout(() => navigate("/auth/login"), 1500);
       return <h1>Unauthorized</h1>;
     }
@@ -80,9 +71,20 @@ export default function TodoPage() {
     else return <h1>Server Error</h1>;
   }
 
+  const user = localStorage.getItem('user');
+
   return (
     <>
-      <NavBar />
+      <NavBar >
+        <nav>
+          <h1>TodoMatic</h1>
+          <div className="nav-profile">
+            <span className="user">{user}</span>
+            <span> | </span>
+            <Link to="/auth/login" onClick={handleLogout}>Logout</Link>
+          </div>
+        </nav>
+      </NavBar>
       <div className="todoapp stack-large">
         <Form addTask={addTask} />
         <div className="filters btn-group stack-exception">{filterList}</div>
@@ -108,7 +110,7 @@ export default function TodoPage() {
       const response = await myApi.post('/tasks', newTask);
       setTasks([response.data.task, ...tasks]);
     } catch (error) {
-      console.error(error.response.data)
+      alert(error.response.data)
     }
   }
 
@@ -121,7 +123,7 @@ export default function TodoPage() {
           await myApi.put(`/tasks/${id}`, { completed: toggled, name: task.name });
           task.completed = toggled;
         } catch (error) {
-          console.error(error.response.data);
+          alert(error.response.data);
         }
       }
       updatedTaskList.push(task)
@@ -136,7 +138,7 @@ export default function TodoPage() {
         try {
           await myApi.delete(`/tasks/${id}`);
         } catch (error) {
-          console.error(error.response.data);
+          alert(error.response.data);
         }
         continue;
       }
@@ -153,11 +155,36 @@ export default function TodoPage() {
           await myApi.put(`/tasks/${id}`, { completed: task.completed, name: newName });
           task.name = newName;
         } catch (error) {
-          console.error(error.response.data);
+          alert(error.response.data);
         }
       }
       updatedTaskList.push(task)
     }
     setTasks(updatedTaskList);
+  }
+
+  function fetchTasks() {
+    myApi
+      .get(`/tasks`)
+      .then((res) => {
+        setApiStatus(res.status);
+        setTasks(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (!err.response) setApiStatus(500);
+        else setApiStatus(err.response.status);
+        setLoading(false);
+      });
+  }
+
+  async function handleLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    try {
+      await myApi.post("/users/logout")
+    } catch (error) {
+      alert(error.response);
+    }
   }
 }
