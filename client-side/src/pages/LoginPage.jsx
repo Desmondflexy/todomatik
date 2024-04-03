@@ -22,11 +22,7 @@ export default function LoginPage() {
   }
   return (
     <>
-      <NavBar >
-        <nav>
-          <h1>TodoMatic</h1>
-        </nav>
-      </NavBar>
+      <NavBar ></NavBar>
       <div className="todoapp stack-large center">
         <h1>Login</h1>
         <form className='auth' onSubmit={handleLogin}>

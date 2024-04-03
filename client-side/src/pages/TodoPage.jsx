@@ -76,14 +76,11 @@ export default function TodoPage() {
   return (
     <>
       <NavBar >
-        <nav>
-          <h1>TodoMatic</h1>
-          <div className="nav-profile">
-            <span className="user">{user}</span>
-            <span> | </span>
-            <Link to="/auth/login" onClick={handleLogout}>Logout</Link>
-          </div>
-        </nav>
+        <div className="nav-profile">
+          <span className="user">{user}</span>
+          <span> | </span>
+          <Link to="/auth/login" onClick={handleLogout}>Logout</Link>
+        </div>
       </NavBar>
       <div className="todoapp stack-large">
         <Form addTask={addTask} />

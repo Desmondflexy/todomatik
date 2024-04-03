@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let baseURL = 'http://localhost:3000';
 if (import.meta.env.VITE_APP_NODE_ENV === 'production') {
-  baseURL = 'https://todomatic.onrender.com';
+  baseURL = import.meta.env.VITE_APP_SERVER;
 }
 
 const config = {

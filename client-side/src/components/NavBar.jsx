@@ -1,6 +1,15 @@
-// import { Link } from "react-router-dom";
-// import myApi from "../api.config";
+import PropTypes from "prop-types"
 
-export default function NavBar({children}) {
-  return children
+/**The Nav bar component */
+export default function NavBar(props) {
+  return (
+    <nav>
+      <h1>TodoMatic</h1>
+      {props.children}
+    </nav>
+  )
+}
+
+NavBar.propTypes = {
+  children: PropTypes.node.isRequired
 }

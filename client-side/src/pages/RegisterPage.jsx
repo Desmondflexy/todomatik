@@ -25,9 +25,7 @@ export default function RegisterPage() {
   return (
     <>
       <NavBar >
-        <nav>
-          <h1>TodoMatic</h1>
-        </nav>
+        
       </NavBar>
       <div className="todoapp stack-large center">
         <h1>Register</h1>
