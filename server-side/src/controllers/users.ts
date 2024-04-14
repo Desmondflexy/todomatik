@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import User from "../models/users";
 import bcrypt from "bcryptjs";
-import { attachToken, generateToken } from "../utils";
+import { attachToken, generateToken, devLog } from "../utils";
 import * as v from "../validators";
-import { devLog } from "../utils";
 
 export async function logout(req: Request, res: Response) {
   res.clearCookie("token");
